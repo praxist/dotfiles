@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+
+TYPE=$1
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ "$SCRIPT_DIR" != $(pwd) ]
+then
+  echo "You must run this script from $SCRIPT_DIR!"
+  exit 1
+fi
+
+function copy_file() {
+  FILE=$1
+  if [ -f $HOME/$FILE ];
+  then
+    echo "$HOME/$FILE exists, creating a backup .bak file."
+    cp -v $HOME/$FILE $HOME/$FILE.bak
+  fi
+  cp -v $FILE $HOME/$FILE
+  echo "Copied over $HOME/$FILE"
+}
+
+if [ "$TYPE" == "remote" ]
+then
+  copy_file ".vimrc_abridged"
+  copy_file ".bashrc_abridged"
+else
+  copy_file ".vimrc"
+  copy_file ".bashrc"
+fi
+
+cp -Rv .vim/* ~/.vim
+echo "Complete."

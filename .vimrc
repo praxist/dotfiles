@@ -129,6 +129,7 @@ augroup END
 "}}}
 
 map <leader>n :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
 set grepprg=grep\ -nH\ $*
 set wildignore=*.o,*~,*.pyc
 
