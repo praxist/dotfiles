@@ -12,19 +12,19 @@ fi
 
 function copy_file() {
   FILE=$1
-  if [ -f $HOME/$FILE ];
+  DEST=$2
+  if [ -f $HOME/$DEST ];
   then
-    echo "$HOME/$FILE exists, creating a backup .bak file."
-    cp -v $HOME/$FILE $HOME/$FILE.bak
+    echo "$HOME/$DEST exists, creating a backup .bak file."
+    cp -v $HOME/$DEST $HOME/$DEST.bak
   fi
-  cp -v $FILE $HOME/$FILE
-  echo "Copied over $HOME/$FILE"
+  cp -v $FILE $HOME/$DEST
 }
 
 if [ "$TYPE" == "remote" ]
 then
-  copy_file ".vimrc_abridged"
-  copy_file ".bashrc_abridged"
+  copy_file ".vimrc_abridged" ".vimrc"
+  copy_file ".bashrc_abridged" ".bash_profile"
 else
   copy_file ".vimrc"
   copy_file ".bashrc"
