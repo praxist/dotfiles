@@ -1,34 +1,37 @@
 #!/bin/bash
 set -e
 
-TYPE=$1
+INSTALL_TYPE=$1
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-if [ "$SCRIPT_DIR" != $(pwd) ]
-then
-  echo "You must run this script from $SCRIPT_DIR!"
-  exit 1
-fi
 
 function copy_file() {
   FILE=$1
-  DEST=$2
+  DEST=${2:-$1}
+
   if [ -f $HOME/$DEST ];
   then
     echo "$HOME/$DEST exists, creating a backup .bak file."
     cp -v $HOME/$DEST $HOME/$DEST.bak
   fi
-  cp -v $FILE $HOME/$DEST
+  cp -v $SCRIPT_DIR/$FILE $HOME/$DEST
 }
 
-if [ "$TYPE" == "remote" ]
+if [ "$INSTALL_TYPE" == "remote" ]
 then
+  echo "Starting remote server installation..."
   copy_file ".vimrc_abridged" ".vimrc"
   copy_file ".bashrc_abridged" ".bash_profile"
 else
+  echo "Starting local installation..."
   copy_file ".vimrc"
   copy_file ".bashrc"
 fi
 
-cp -Rv .vim/* ~/.vim
+if ! [ -d "$HOME/.vim/bundle/neobundle.vim" ]
+then
+  echo "NeoBundle not found. Installing..."
+  $SCRIPT_DIR/script/neobundle_setup.sh
+fi
+
+cp -Rv $SCRIPT_DIR/.vim/* ~/.vim
 echo "Complete."
